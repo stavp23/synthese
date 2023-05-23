@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        #map {
+            width: 928px;
+            height: 835px;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/synthese_1.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[43.894442686092496,4.866452462497627],[43.91732013541501,4.9014541224595005]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_lycee_2022_georeftif_0');
+        map.getPane('pane_lycee_2022_georeftif_0').style.zIndex = 400;
+        var img_lycee_2022_georeftif_0 = 'data/lycee_2022_georeftif_0.png';
+        var img_bounds_lycee_2022_georeftif_0 = [[43.90502195378139,4.867011490363534],[43.91662841322215,4.887307481622088]];
+        var layer_lycee_2022_georeftif_0 = new L.imageOverlay(img_lycee_2022_georeftif_0,
+                                              img_bounds_lycee_2022_georeftif_0,
+                                              {pane: 'pane_lycee_2022_georeftif_0'});
+        bounds_group.addLayer(layer_lycee_2022_georeftif_0);
+        map.addLayer(layer_lycee_2022_georeftif_0);
+        function pop_synthese_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">nombre</th>\
+                        <td>' + (feature.properties['nombre'] !== null ? autolinker.link(feature.properties['nombre'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">certitude</th>\
+                        <td>' + (feature.properties['certitude'] !== null ? autolinker.link(feature.properties['certitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">nom_oiseau</th>\
+                        <td>' + (feature.properties['nom_oiseau'] !== null ? autolinker.link(feature.properties['nom_oiseau'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">type_conta</th>\
+                        <td>' + (feature.properties['type_conta'] !== null ? autolinker.link(feature.properties['type_conta'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_synthese_1_0(feature) {
+            switch(String(feature.properties['nom_oiseau'])) {
+                case 'Bec-croisé des sapins':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(202,3,252,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bruant':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,68,121,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'chardonneret elegant':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(180,27,109,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'choucas des tours':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(117,119,13,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'corneille noire':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(105,45,217,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'etourneau sansonnet':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(67,243,196,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'fauvette mélanocéphale':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,135,63,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'gobemouche gris':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(105,147,247,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Grimpereau des jardins':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,104,176,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'huppe fasciée':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(217,0,7,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'martin pecheur d\'europe':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(135,140,142,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'martinet noir':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(219,231,190,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'mésange à longue queue':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(6,140,142,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'mésange bleue':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(74,19,51,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'mesange charbonnière':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(172,102,100,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'moineau domestique':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(31,153,138,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'moineau espagnol':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(31,162,7,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'perruche à collier':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(158,170,130,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'perruche jaune':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(120,110,64,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'pie bavarde':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(124,101,209,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'pigeon biset':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(74,194,109,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'pigeon ramier':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(116,250,122,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'pipit farlouse':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(197,172,165,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rouge gorge':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(118,99,114,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'rouge gorge familier':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(158,217,58,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'rougequeue noir':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(220,222,42,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'serin cini':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,183,29,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'tourterelle turque':
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(180,177,20,1.0)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_synthese_1',
+                radius: 7.999999999999998,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(253,92,37,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_synthese_1');
+        map.getPane('pane_synthese_1').style.zIndex = 401;
+        map.getPane('pane_synthese_1').style['mix-blend-mode'] = 'normal';
+        var layer_synthese_1 = new L.geoJson(json_synthese_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_synthese_1',
+            layerName: 'layer_synthese_1',
+            pane: 'pane_synthese_1',
+            onEachFeature: pop_synthese_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_synthese_1_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_synthese_1);
+        map.addLayer(layer_synthese_1);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'synthese<br /><table><tr><td style="text-align: center;"><img src="legend/synthese_1_Beccroisédessapins0.png" /></td><td>Bec-croisé des sapins</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_Bruant1.png" /></td><td>Bruant</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_chardonneretelegant2.png" /></td><td>chardonneret elegant</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_choucasdestours3.png" /></td><td>choucas des tours</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_corneillenoire4.png" /></td><td>corneille noire</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_etourneausansonnet5.png" /></td><td>etourneau sansonnet</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_fauvettemélanocéphale6.png" /></td><td>fauvette mélanocéphale</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_gobemouchegris7.png" /></td><td>gobemouche gris</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_Grimpereaudesjardins8.png" /></td><td>Grimpereau des jardins</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_huppefasciée9.png" /></td><td>huppe fasciée</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_martinpecheurdeurope10.png" /></td><td>martin pecheur d\'europe</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_martinetnoir11.png" /></td><td>martinet noir</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_mésangeàlonguequeue12.png" /></td><td>mésange à longue queue</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_mésangebleue13.png" /></td><td>mésange bleue</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_mesangecharbonnière14.png" /></td><td>mesange charbonnière</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_moineaudomestique15.png" /></td><td>moineau domestique</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_moineauespagnol16.png" /></td><td>moineau espagnol</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_perrucheàcollier17.png" /></td><td>perruche à collier</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_perruchejaune18.png" /></td><td>perruche jaune</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_piebavarde19.png" /></td><td>pie bavarde</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_pigeonbiset20.png" /></td><td>pigeon biset</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_pigeonramier21.png" /></td><td>pigeon ramier</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_pipitfarlouse22.png" /></td><td>pipit farlouse</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_Rougegorge23.png" /></td><td>Rouge gorge</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_rougegorgefamilier24.png" /></td><td>rouge gorge familier</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_rougequeuenoir25.png" /></td><td>rougequeue noir</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_serincini26.png" /></td><td>serin cini</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_tourterelleturque27.png" /></td><td>tourterelle turque</td></tr><tr><td style="text-align: center;"><img src="legend/synthese_1_28.png" /></td><td></td></tr></table>': layer_synthese_1,"lycee_2022_georef.tif": layer_lycee_2022_georeftif_0,}).addTo(map);
+        setBounds();
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        resetLabels([layer_synthese_1]);
+        map.on("zoomend", function(){
+            resetLabels([layer_synthese_1]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_synthese_1]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_synthese_1]);
+        });
+        </script>
+    </body>
+</html>
